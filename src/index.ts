@@ -21,7 +21,7 @@ class SolutioFi {
   constructor(options: SolutioFiSdkOptions) {
     this.apiKey = options.apiKey;
     this.client = axios.create({
-      baseURL: options.baseUrl || "https://api.synthesis.solutiofi.io",
+      baseURL: options.baseUrl || "https://api.solutiofi.io",
       headers: {
         "Content-Type": "application/json",
       },
@@ -45,15 +45,11 @@ class SolutioFi {
   }
 
   async authenticate(): Promise<void> {
-    const response = await this.client.post(
-      "/auth/token",
-      {},
-      {
-        headers: {
-          "x-api-key": this.apiKey,
-        },
-      }
-    );
+    const response = await this.client.get("/auth/token", {
+      headers: {
+        "x-api-key": this.apiKey,
+      },
+    });
     this.bearerToken = response.data.token;
     this.client.defaults.headers.common[
       "Authorization"
@@ -62,22 +58,22 @@ class SolutioFi {
 
   async createCloseTransaction(
     owner: string,
-    accounts: string[]
+    mints: string[]
   ): Promise<CloseTransactionResponse> {
     const response = await this.client.post("/v1/close/create", {
       owner,
-      accounts,
+      mints,
     });
     return response.data;
   }
 
   async createBurnTransaction(
     owner: string,
-    assets: string[]
+    mints: string[]
   ): Promise<BurnTransactionResponse> {
     const response = await this.client.post("/v1/burn/create", {
       owner,
-      assets,
+      mints,
     });
     return response.data;
   }
