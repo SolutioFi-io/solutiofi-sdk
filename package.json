@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@jup-ag/api": "^6.0.36",
     "axios": "^1.7.9",
     "typescript": "^5.7.3"
   },

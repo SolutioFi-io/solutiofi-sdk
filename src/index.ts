@@ -1,4 +1,12 @@
 import axios, { AxiosInstance } from "axios";
+import {
+  BurnTransactionResponse,
+  CloseTransactionResponse,
+  MergeResponse,
+  PriceResponse,
+  SpreadResponse,
+  TokenResponse,
+} from "./types";
 
 interface SolutioFiSdkOptions {
   apiKey: string;
@@ -22,7 +30,10 @@ class SolutioFi {
     this.client.interceptors.response.use(
       (response) => response,
       async (error) => {
-        if (error.response && error.response.status === 401) {
+        if (
+          error.response &&
+          (error.response.status === 401 || error.response.status === 403)
+        ) {
           await this.authenticate();
           const config = error.config;
           config.headers["Authorization"] = `Bearer ${this.bearerToken}`;
@@ -49,15 +60,10 @@ class SolutioFi {
     ] = `Bearer ${this.bearerToken}`;
   }
 
-  async getTokenPrices(mints: string[]): Promise<any> {
-    const response = await this.client.post("/v1/tokens/prices", { mints });
-    return response.data;
-  }
-
   async createCloseTransaction(
     owner: string,
     accounts: string[]
-  ): Promise<any> {
+  ): Promise<CloseTransactionResponse> {
     const response = await this.client.post("/v1/close/create", {
       owner,
       accounts,
@@ -65,7 +71,10 @@ class SolutioFi {
     return response.data;
   }
 
-  async createBurnTransaction(owner: string, assets: string[]): Promise<any> {
+  async createBurnTransaction(
+    owner: string,
+    assets: string[]
+  ): Promise<BurnTransactionResponse> {
     const response = await this.client.post("/v1/burn/create", {
       owner,
       assets,
@@ -73,12 +82,12 @@ class SolutioFi {
     return response.data;
   }
 
-  async createSwapTransaction(
+  async createMergeTransaction(
     owner: string,
     inputAssets: any[],
     outputMint: string,
     priorityFee: string
-  ): Promise<any> {
+  ): Promise<MergeResponse> {
     const response = await this.client.post("/v1/swap/merge", {
       owner,
       inputAssets,
@@ -93,7 +102,7 @@ class SolutioFi {
     inputAsset: any,
     targetTokens: any[],
     priorityFee: string
-  ): Promise<any> {
+  ): Promise<SpreadResponse> {
     const response = await this.client.post("/v1/swap/spread", {
       owner,
       inputAsset,
@@ -103,7 +112,12 @@ class SolutioFi {
     return response.data;
   }
 
-  async getUserTokens(owner: string, type: string): Promise<any> {
+  async getTokenPrices(mints: string[]): Promise<PriceResponse> {
+    const response = await this.client.post("/v1/tokens/prices", { mints });
+    return response.data;
+  }
+
+  async getUserTokens(owner: string, type: string): Promise<TokenResponse> {
     const response = await this.client.post("/v1/usertokens", { owner, type });
     return response.data;
   }
