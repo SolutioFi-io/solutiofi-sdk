@@ -34,7 +34,6 @@ class SolutioFi {
   }
 
   async authenticate(): Promise<void> {
-    console.log("22");
     const response = await this.client.post(
       "/auth/token",
       {},
@@ -44,7 +43,6 @@ class SolutioFi {
         },
       }
     );
-    console.log(response);
     this.bearerToken = response.data.token;
     this.client.defaults.headers.common[
       "Authorization"

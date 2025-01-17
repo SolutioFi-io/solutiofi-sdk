@@ -1,5 +1,4 @@
 import SolutioFi from "../src/index";
-console.log("2  ");
 
 const api = new SolutioFi({
   apiKey: "solutiofi-api-key",
