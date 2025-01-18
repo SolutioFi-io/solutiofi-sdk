@@ -3,7 +3,6 @@ import { VersionedTransaction } from "@solana/web3.js";
 import { deserialize } from "./utils";
 import {
   AssetType,
-  CloseTransactionResponse,
   InputAssetStruct,
   MergeResponse,
   PriceResponse,
@@ -74,7 +73,7 @@ class SolutioFi {
    * @param mints - Array of mint addresses for the accounts to close.
    * @returns An array of versioned transactions.
    */
-  async createCloseTransaction(
+  async close(
     owner: string,
     mints: string[]
   ): Promise<VersionedTransaction[]> {
@@ -117,7 +116,7 @@ class SolutioFi {
    * @param priorityFee - The priority fee for the transaction ("fast", "turbo", or "ultra").
    * @returns The response containing transaction details.
    */
-  async createMergeTransaction(
+  async merge(
     owner: string,
     inputAssets: InputAssetStruct[],
     outputMint: string,
@@ -150,7 +149,7 @@ class SolutioFi {
    * @param priorityFee - The priority fee for the transaction ("fast", "turbo", or "ultra").
    * @returns The response containing transaction details.
    */
-  async createSpreadTransaction(
+  async spread(
     owner: string,
     inputAsset: InputAssetStruct,
     targetTokens: TargetTokenStruct[],
