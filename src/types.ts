@@ -1,4 +1,5 @@
 import type { QuoteResponse } from "@jup-ag/api";
+import { VersionedTransaction } from "@solana/web3.js";
 
 /**
  * Options for initializing the SolutioFi SDK.
@@ -46,14 +47,6 @@ export interface UserTokens {
 
 /** Response for a close transaction. */
 export interface CloseTransactionResponse {
-  /** Array of serialized transactions. */
-  transactions: string[];
-  /** Error message, if any. */
-  error: string | null;
-}
-
-/** Response for a burn transaction. */
-export interface BurnTransactionResponse {
   /** Array of serialized transactions. */
   transactions: string[];
   /** Error message, if any. */

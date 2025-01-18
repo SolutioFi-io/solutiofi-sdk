@@ -1,7 +1,8 @@
 import axios, { AxiosInstance } from "axios";
+import { VersionedTransaction } from "@solana/web3.js";
+import { deserialize } from './utils';
 import {
   AssetType,
-  BurnTransactionResponse,
   CloseTransactionResponse,
   InputAssetStruct,
   MergeResponse,
@@ -84,20 +85,25 @@ class SolutioFi {
   }
 
   /**
-   * Creates a transaction to burn assets.
+   * Create burn transactions.
    * @param owner - The wallet address of the account owner.
    * @param mints - Array of mint addresses for the assets to burn.
-   * @returns The response containing transaction details.
+   * @returns An array of versioned transactions.
    */
-  async createBurnTransaction(
+  async burn(
     owner: string,
     mints: string[]
-  ): Promise<BurnTransactionResponse> {
+  ): Promise<VersionedTransaction[]> {
     const response = await this.client.post("/v1/burn/create", {
       owner,
       mints,
     });
-    return response.data;
+
+    if(response.data.error) {
+      throw new Error(`SolutfioFi API error: ${response.data.error}`);
+    }
+
+    return deserialize(response.data.transactions);
   }
 
   /**
