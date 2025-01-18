@@ -1,4 +1,5 @@
 import type { QuoteResponse } from "@jup-ag/api";
+import { VersionedTransaction } from "@solana/web3.js";
 
 /**
  * Options for initializing the SolutioFi SDK.
@@ -8,56 +9,6 @@ export interface SolutioFiSdkOptions {
   apiKey: string;
   /** Base URL for the API. Defaults to "https://api.solutiofi.io". */
   baseUrl?: string;
-}
-
-export interface TokenPrice {
-  mint: string;
-  price: number;
-}
-
-export interface CloseTransaction {
-  owner: string;
-  accounts: string[];
-}
-
-export interface BurnTransaction {
-  owner: string;
-  assets: string[];
-}
-
-export interface SwapTransaction {
-  owner: string;
-  inputAssets: any[];
-  outputMint: string;
-  priorityFee: string;
-}
-
-export interface SpreadTransaction {
-  owner: string;
-  inputAsset: any;
-  targetTokens: any[];
-  priorityFee: string;
-}
-
-export interface UserTokens {
-  owner: string;
-  type: string;
-}
-
-/** Response for a close transaction. */
-export interface CloseTransactionResponse {
-  /** Array of serialized transactions. */
-  transactions: string[];
-  /** Error message, if any. */
-  error: string | null;
-}
-
-/** Response for a burn transaction. */
-export interface BurnTransactionResponse {
-  /** Array of serialized transactions. */
-  transactions: string[];
-  /** Error message, if any. */
-  error: string | null;
 }
 
 /** Represents information about a token's price. */
@@ -132,8 +83,8 @@ export interface ProcessAssetData {
   asset: SwapAssetData;
   /** The quote details for the asset. */
   quote: QuoteResponse;
-  /** The serialized transaction data. */
-  transaction: string;
+  /** Versioned transaction. */
+  transaction: VersionedTransaction;
   /** The block height when the transaction becomes invalid. */
   lastValidBlockHeight: number;
 }
