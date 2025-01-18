@@ -1,8 +1,9 @@
 {
   "name": "@solutiofi/sdk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "This SDK provides a convenient way to interact with the SolutioFi API.",
   "main": "dist/index.js",
+  "module": "dist/index.m.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "rm -rf dist && microbundle --tsconfig tsconfig.json --no-sourcemap",
