@@ -125,8 +125,8 @@ export interface ProcessAssetData {
   asset: SwapAssetData;
   /** The quote details for the asset. */
   quote: QuoteResponse;
-  /** The serialized transaction data. */
-  transaction: string;
+  /** Versioned transaction. */
+  transaction: VersionedTransaction;
   /** The block height when the transaction becomes invalid. */
   lastValidBlockHeight: number;
 }

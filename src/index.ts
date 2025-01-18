@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import { VersionedTransaction } from "@solana/web3.js";
-import { deserialize } from './utils';
+import { deserialize } from "./utils";
 import {
   AssetType,
   CloseTransactionResponse,
@@ -8,6 +8,7 @@ import {
   MergeResponse,
   PriceResponse,
   PriorityFee,
+  ProcessAssetData,
   SolutioFiSdkOptions,
   SpreadResponse,
   TargetTokenStruct,
@@ -71,17 +72,22 @@ class SolutioFi {
    * Creates a transaction to close accounts.
    * @param owner - The wallet address of the account owner.
    * @param mints - Array of mint addresses for the accounts to close.
-   * @returns The response containing transaction details.
+   * @returns An array of versioned transactions.
    */
   async createCloseTransaction(
     owner: string,
     mints: string[]
-  ): Promise<CloseTransactionResponse> {
+  ): Promise<VersionedTransaction[]> {
     const response = await this.client.post("/v1/close/create", {
       owner,
       mints,
     });
-    return response.data;
+
+    if (response.data.error) {
+      throw new Error(`SolutfioFi API error: ${response.data.error}`);
+    }
+
+    return deserialize(response.data.transactions);
   }
 
   /**
@@ -90,16 +96,13 @@ class SolutioFi {
    * @param mints - Array of mint addresses for the assets to burn.
    * @returns An array of versioned transactions.
    */
-  async burn(
-    owner: string,
-    mints: string[]
-  ): Promise<VersionedTransaction[]> {
+  async burn(owner: string, mints: string[]): Promise<VersionedTransaction[]> {
     const response = await this.client.post("/v1/burn/create", {
       owner,
       mints,
     });
 
-    if(response.data.error) {
+    if (response.data.error) {
       throw new Error(`SolutfioFi API error: ${response.data.error}`);
     }
 
@@ -126,6 +129,16 @@ class SolutioFi {
       outputMint,
       priorityFee,
     });
+
+    if (response.data.transactions) {
+      response.data.transactions = response.data.transactions.map(
+        (tx: ProcessAssetData) => ({
+          ...tx,
+          transaction: deserialize([tx.transaction])[0],
+        })
+      );
+    }
+
     return response.data;
   }
 
@@ -149,6 +162,16 @@ class SolutioFi {
       targetTokens,
       priorityFee,
     });
+
+    if (response.data.transactions) {
+      response.data.transactions = response.data.transactions.map(
+        (tx: ProcessAssetData) => ({
+          ...tx,
+          transaction: deserialize([tx.transaction])[0],
+        })
+      );
+    }
+
     return response.data;
   }
 
