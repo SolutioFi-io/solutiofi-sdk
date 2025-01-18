@@ -1,7 +1,7 @@
 import SolutioFi from "../src/index";
 
 const api = new SolutioFi({
-  apiKey: "solutiof-api-key",
+  apiKey: "solutiofi-api-key",
 });
 
 async function main() {
